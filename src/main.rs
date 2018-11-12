@@ -12,9 +12,9 @@
 //!     Redraw the board, rather than printing a new one.
 //!     Add benchmarks.
 //!     Increase unit test coverage & measure coverage.
-//!     Add a proper command line interface with help text and options.
+extern crate clap;
+
 use std::fmt;
-use std::env;
 use std::io;
 use std::process::exit;
 use std::io::prelude::*;
@@ -218,10 +218,13 @@ fn help() {
 }
 
 fn main() {
-    if env::args().len() > 1 {
-        help();
-        exit(1);
-    }
+    use clap::App;
+
+    App::new(env!("CARGO_PKG_NAME"))
+        .version(env!("CARGO_PKG_VERSION"))
+        .author(env!("CARGO_PKG_AUTHORS"))
+        .about(env!("CARGO_PKG_DESCRIPTION"))
+        .get_matches();
 
     game();
 }
