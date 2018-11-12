@@ -158,7 +158,7 @@ fn turn(board:&mut Board, player: &Square) -> bool {
         // Parse the input to a point.
         match input.trim().as_ref() {
             "q" | "quit" | "e" | "exit" => exit(0),
-            "h" | "help" | "i" | "info" => help(0), // TODO: should not exit.
+            "h" | "help" | "i" | "info" => { help(); continue; },
             _                           => match Point::from_str(&input) {
                 Ok (p) => point = p,
                 Err(_) => {
@@ -203,14 +203,24 @@ fn game() {
     println!("Thank you for playing.");
 }
 
-fn help(code: i32) -> ! {
-    println!("Help text...");
-    exit(code);
+fn help() {
+    println!("
+    To win, place three circles (or crosses) in a line.
+
+    Specify a square to place a circle or cross by entering 'X, Y',
+    where X and Y are the x-coordinate (column) and y-coordinate (row)
+    respectively.
+
+    Options:
+        q/quit      Exit the game.
+        h/help      Display this text.
+    ");
 }
 
 fn main() {
     if env::args().len() > 1 {
-        help(1);
+        help();
+        exit(1);
     }
 
     game();
