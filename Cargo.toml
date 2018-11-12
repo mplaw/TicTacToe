@@ -1,4 +1,6 @@
 [package]
 name = "tictactoe"
 version = "0.1.0"
-authors = ["Matt"]
+authors = ["Matt Law"]
+description = "Tic-Tac-Toe written in Rust."
+readme = "README.rst"
