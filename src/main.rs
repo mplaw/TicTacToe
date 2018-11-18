@@ -38,8 +38,8 @@ struct Point {
 #[derive(Copy, Clone, PartialEq)]
 enum Square {
     None,       // TODO: replace with Some()
-    Circle,
-    Cross,
+    O,
+    X,
 }
 
 /// The Tic-tac-toe board.
@@ -64,8 +64,8 @@ impl fmt::Display for Square {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         match *self {
             Square::None   => write!(f, " "),
-            Square::Circle => write!(f, "O"),
-            Square::Cross  => write!(f, "X"),
+            Square::O => write!(f, "O"),
+            Square::X  => write!(f, "X"),
         }
     }
 }
@@ -181,7 +181,7 @@ fn turn(board:&mut Board, player: &Square) -> bool {
 }
 
 fn game() {
-    let players = [Square::Circle, Square::Cross];
+    let players = [Square::O, Square::X];
     let mut board = Board { squares: [Square::None; 9] };
     let mut winner: std::option::Option<Square> = None;
 
@@ -274,9 +274,9 @@ mod tests {
     #[test]
     fn test_board_set_square() {
         let mut board = Board { squares: [Square::None; 9] };
-        assert_eq!(board.set_square(&Point {x:0, y:0}, &Square::Circle), Ok(0),
+        assert_eq!(board.set_square(&Point {x:0, y:0}, &Square::O), Ok(0),
             "Setting an empty square inside the board be OK.");
-        assert_eq!(board.set_square(&Point {x:3, y:3}, &Square::Circle), Err(1),
+        assert_eq!(board.set_square(&Point {x:3, y:3}, &Square::O), Err(1),
             "Setting a square outside the board should fail.");
     }
 
@@ -284,43 +284,43 @@ mod tests {
     fn test_check_for_victory() {
         assert_eq!(check_for_victory(
             &Board { squares: [Square::None; 9] },
-            &Square::Circle,
+            &Square::O,
             &Point { x:0, y:0 }
         ), false, "No player can be victorious with an empty board.");
         assert_eq!(check_for_victory(
             &Board { squares: [
-                Square::Circle, Square::Circle, Square::Circle,
+                Square::O, Square::O, Square::O,
                 Square::None, Square::None, Square::None,
                 Square::None, Square::None, Square::None,
             ] },
-            &Square::Circle,
+            &Square::O,
             &Point { x: 0, y: 0 }
         ), true, "Three in the top row should be victory.");
         assert_eq!(check_for_victory(
             &Board { squares: [
-                Square::Circle, Square::None, Square::None,
-                Square::Circle, Square::None, Square::None,
-                Square::Circle, Square::None, Square::None,
+                Square::O, Square::None, Square::None,
+                Square::O, Square::None, Square::None,
+                Square::O, Square::None, Square::None,
             ] },
-            &Square::Circle,
+            &Square::O,
             &Point { x:0, y:0 }
         ), true, "Three in the left column should be victory.");
         assert_eq!(check_for_victory(
             &Board { squares: [
-                Square::Circle, Square::None, Square::None,
-                Square::None, Square::Circle, Square::None,
-                Square::None, Square::None, Square::Circle,
+                Square::O, Square::None, Square::None,
+                Square::None, Square::O, Square::None,
+                Square::None, Square::None, Square::O,
             ] },
-            &Square::Circle,
+            &Square::O,
             &Point { x:0, y:0 }
         ), true, "Three in the left diagonal should be victory.");
         assert_eq!(check_for_victory(
             &Board { squares: [
-                Square::Circle, Square::None, Square::None,
-                Square::None, Square::Circle, Square::None,
-                Square::None, Square::None, Square::Circle,
+                Square::O, Square::None, Square::None,
+                Square::None, Square::O, Square::None,
+                Square::None, Square::None, Square::O,
             ] },
-            &Square::Cross,
+            &Square::X,
             &Point { x:0, y:0 }
         ), false, "A victory for circle is not a victory for Cross.");
     }
