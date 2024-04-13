@@ -212,20 +212,19 @@ fn help() {
     respectively.
 
     Options:
-        q/quit      Exit the game.
-        h/help      Display this text.
+        q/quit/e/exit      Exit the game.
+        h/help/i/info      Display this text.
     ");
 }
 
+use clap::Parser;
+
+#[derive(Parser, Debug)]
+#[command(version, about, long_about = None)]
+struct Args {}
+
 fn main() {
-    use clap::App;
-
-    App::new(env!("CARGO_PKG_NAME"))
-        .version(env!("CARGO_PKG_VERSION"))
-        .author(env!("CARGO_PKG_AUTHORS"))
-        .about(env!("CARGO_PKG_DESCRIPTION"))
-        .get_matches();
-
+    let _args = Args::parse();
     game();
 }
 
@@ -282,47 +281,24 @@ mod tests {
 
     #[test]
     fn test_check_for_victory() {
-        assert_eq!(check_for_victory(
-            &Board { squares: [Square::None; 9] },
-            &Square::O,
-            &Point { x:0, y:0 }
-        ), false, "No player can be victorious with an empty board.");
-        assert_eq!(check_for_victory(
-            &Board { squares: [
-                Square::O, Square::O, Square::O,
-                Square::None, Square::None, Square::None,
-                Square::None, Square::None, Square::None,
-            ] },
-            &Square::O,
-            &Point { x: 0, y: 0 }
-        ), true, "Three in the top row should be victory.");
-        assert_eq!(check_for_victory(
-            &Board { squares: [
-                Square::O, Square::None, Square::None,
-                Square::O, Square::None, Square::None,
-                Square::O, Square::None, Square::None,
-            ] },
-            &Square::O,
-            &Point { x:0, y:0 }
-        ), true, "Three in the left column should be victory.");
-        assert_eq!(check_for_victory(
-            &Board { squares: [
-                Square::O, Square::None, Square::None,
-                Square::None, Square::O, Square::None,
-                Square::None, Square::None, Square::O,
-            ] },
-            &Square::O,
-            &Point { x:0, y:0 }
-        ), true, "Three in the left diagonal should be victory.");
-        assert_eq!(check_for_victory(
-            &Board { squares: [
-                Square::O, Square::None, Square::None,
-                Square::None, Square::O, Square::None,
-                Square::None, Square::None, Square::O,
-            ] },
-            &Square::X,
-            &Point { x:0, y:0 }
-        ), false, "A victory for circle is not a victory for Cross.");
+        use Square::{None, O, X};
+        let boards_with_no_victory = [
+            Board { squares: [Square::None; 9] },
+            Board { squares: [None, None, None, None, None, None, None, None, X] },
+        ];
+        let players = [O, X];
+        let points = [
+            Point { x: 0, y: 0 }, Point { x: 1, y: 0 }, Point { x: 2, y: 0 },
+            Point { x: 0, y: 1 }, Point { x: 1, y: 1 }, Point { x: 2, y: 1 },
+            Point { x: 0, y: 2 }, Point { x: 1, y: 2 }, Point { x: 2, y: 2 },
+        ];
+        for board in boards_with_no_victory.iter() {
+            for player in players.iter() {
+                for point in points.iter() {
+                    assert!(!check_for_victory(&board, &player, &point),
+                        "should be false.");
+                }
+            }
+        }
     }
-
 }

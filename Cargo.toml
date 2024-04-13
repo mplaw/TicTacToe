@@ -2,8 +2,8 @@
 name = "tictactoe"
 version = "0.1.0"
 authors = ["Matt Law"]
-description = "Tic-Tac-Toe written in Rust."
 readme = "README.rst"
+description = "Tic-Tac-Toe written in Rust."
 
 [dependencies]
-clap = "2.31.2"
+clap = { version = "4.5.4", features = ["derive"] }
